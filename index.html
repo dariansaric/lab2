@@ -19,7 +19,7 @@
 
         function init() {
             if (!window.WebSocket) {
-                alert("This browser doesn't support WebScoket!!")
+                alert("This browser doesn't support WebScoket!!");
                 return false;
             }
             results = $("#results");
@@ -55,6 +55,7 @@
                     break;
                 case "update":
                     alert("Primljen update");
+
                     // todo
                     break;
                 default:
@@ -67,12 +68,12 @@
         }
 
         function addTableRow(game) {
-            let html = "<tr id=game.id>";
-            html += "<td>" + game.away.name + "</td>"; // dodaj away
+            let html = "<tr id=" + game.id + ">";
+            html += "<td id='" + game.id + "-away'>" + game.away.name + "</td>"; // dodaj away
             html += "<td>" + game.score.away + " : " + game.score.home + "</td>"; // dodaj score
             html += "<td>" + game.home.name + "</td>"; // dodaj home
             html += "<td>" + game.time.quarter + " "
-                + game.time.clock.min + ":" + game.time.clock.sec + "</td>"; // dodaj time
+                + game.time.clock.min + ":" + ("%0" + game.time.clock.sec).slice(-2) + "</td>"; // dodaj time
             html += "<td>" + game.stadium + "</td>"; // dodaj stadium
             html += "</tr>";
 
