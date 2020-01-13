@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rezultati.domena</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        let wsUri = "ws://localhost:8081";
+        var results;
+        var ws;
+        // todo: actual dohvacanje sranja
+        $(document).ready(function () {
+            if (!init()) {
+                return;
+            }
+
+            createSocket();
+        });
+
+        function init() {
+            if (!window.WebSocket) {
+                alert("This browser doesn't support WebScoket!!")
+                return false;
+            }
+            results = $("#results");
+            return true;
+        }
+
+        function createSocket() {
+            ws = new WebSocket(wsUri);
+            ws.onopen = evt => onOpen(evt);
+            ws.onclose = evt => onClose(evt);
+            ws.onerror = evt => onError(evt);
+            ws.onmessage = evt => onMessage(evt);
+        }
+
+        function onOpen(evt) {
+            $("#con-status").text("Connected");
+        }
+
+        function onClose(evt) {
+            $("#con-status").text("Disconnected");
+        }
+
+        function onError(evt) {
+            $("#con-status").text("Something went wrong!!");
+        }
+
+        function onMessage(evt) {
+            let msg = JSON.parse(evt.data);
+            switch (msg.type) {
+                case "all":
+                    alert("Primljeni svi rezultati!!");
+                    msg.games.forEach(g => addTableRow(g));
+                    break;
+                case "update":
+                    alert("Primljen update");
+                    // todo
+                    break;
+                default:
+                    alert("Primljena neispravna poruka");
+                // todo: ignore?
+
+            }
+
+            // todo
+        }
+
+        function addTableRow(game) {
+            let html = "<tr id=game.id>";
+            html += "<td>" + game.away.name + "</td>"; // dodaj away
+            html += "<td>" + game.score.away + " : " + game.score.home + "</td>"; // dodaj score
+            html += "<td>" + game.home.name + "</td>"; // dodaj home
+            html += "<td>" + game.time.quarter + " "
+                + game.time.clock.min + ":" + game.time.clock.sec + "</td>"; // dodaj time
+            html += "<td>" + game.stadium + "</td>"; // dodaj stadium
+            html += "</tr>";
+
+            $("#res-table tbody").append(html);
+        }
+    </script>
+</head>
+<body>
+<h2>Dobrodošli na rezultate uživo</h2>
+Ispod se nalaze trenutni rezultati koje pratimo, ostanite na stranici kako biste pratili rezultate.
+<div id="con-status">Connecting...</div>
+<div id="results">
+    <table id="res-table">
+        <thead>
+        <tr>
+            <th>Away</th>
+            <th>Score</th>
+            <th>Home</th>
+            <th>Time</th>
+            <th>Stadium</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

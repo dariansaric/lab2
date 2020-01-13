@@ -1,0 +1,15 @@
+{
+  "name": "lab2",
+  "version": "1.0.0",
+  "description": "Druga laboratorijska vjezba iz kolegija 'Racunarstvo zasnovano na uslugama' -> WebSocket",
+  "main": "index.js",
+  "dependencies": {
+    "ws": "^7.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dariansaric",
+  "license": "ISC"
+}
