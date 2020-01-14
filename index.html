@@ -13,7 +13,6 @@
             if (!init()) {
                 return;
             }
-
             createSocket();
         });
 
@@ -51,33 +50,57 @@
             switch (msg.type) {
                 case "all":
                     alert("Primljeni svi rezultati!!");
-                    msg.games.forEach(g => addTableRow(g));
+                    msg.games.forEach(g => add_table_row(g));
                     break;
                 case "update":
                     alert("Primljen update");
-
-                    // todo
+                    update_table_row(msg.game);
                     break;
                 default:
                     alert("Primljena neispravna poruka");
                 // todo: ignore?
 
             }
-
-            // todo
         }
 
-        function addTableRow(game) {
-            let html = "<tr id=" + game.id + ">";
-            html += "<td id='" + game.id + "-away'>" + game.away.name + "</td>"; // dodaj away
-            html += "<td>" + game.score.away + " : " + game.score.home + "</td>"; // dodaj score
-            html += "<td>" + game.home.name + "</td>"; // dodaj home
-            html += "<td>" + game.time.quarter + " "
-                + game.time.clock.min + ":" + ("%0" + game.time.clock.sec).slice(-2) + "</td>"; // dodaj time
-            html += "<td>" + game.stadium + "</td>"; // dodaj stadium
+        function add_table_row(game) {
+            let html = "<tr id=tr_" + game.id + ">";
+            html += form_game_table_row(game);
             html += "</tr>";
 
             $("#res-table tbody").append(html);
+        }
+
+        function update_table_row(game) {
+            $("#tr_" + game.id).html(form_game_table_row(game));
+        }
+
+        function convert_down_to_string(down) {
+            switch (down) {
+                case 1:
+                    return "1st";
+                case 2:
+                    return "2nd";
+                case 3:
+                    return "3rd";
+                case 4:
+                    return "4th";
+                default:
+                    return null;
+            }
+        }
+
+        function form_game_table_row(game) {
+            let html = "<td id='" + game.id + "-away'>" + game.away.name + "</td>"; // dodaj away
+            html += "<td id='" + game.id + "-score'>" + game.score.away + " : " + game.score.home + "</td>"; // dodaj score
+            html += "<td id='" + game.id + "-home'>" + game.home.name + "</td>"; // dodaj home
+            html += "<td id='" + game.id + "-time'>" + game.time.quarter + " "
+                + game.time.clock.min + ":" + ("%0" + game.time.clock.sec).slice(-2) + "</td>"; // dodaj time
+            html += "<td id='" + game.id + "-ballSpot'>" + game.ballSpot.side + " " + game.ballSpot.yd + "</td>"; // dodaj lokaciju lopte
+            html += "<td id='" + game.id + "-driveStatus'>" + convert_down_to_string(game.driveStatus.down) +
+                " & " + game.driveStatus.yd + "</td>"; // dodaj down
+            html += "<td id='" + game.id + "-stadium'>" + game.stadium + "</td>"; // dodaj stadium
+            return html;
         }
     </script>
 </head>
@@ -93,6 +116,8 @@ Ispod se nalaze trenutni rezultati koje pratimo, ostanite na stranici kako biste
             <th>Score</th>
             <th>Home</th>
             <th>Time</th>
+            <th>Ball on</th>
+            <th>Down</th>
             <th>Stadium</th>
         </tr>
         </thead>

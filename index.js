@@ -1,5 +1,5 @@
-http = require('http');
-fs = require('fs');
+const http = require('http');
+const fs = require('fs');
 
 let html = fs.readFileSync('index.html');
 // console.log(html.toString());

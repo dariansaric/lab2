@@ -1,0 +1,82 @@
+[
+  {
+    "id": 0,
+    "home": {
+      "name": "Kansas City Chiefs",
+      "short": "KC",
+      "record": {
+        "win": 11,
+        "loss": 5
+      }
+    },
+    "away": {
+      "name": "Tennessee Titans",
+      "short": "TEN",
+      "record": {
+        "win": 9,
+        "loss": 7
+      }
+    },
+    "stadium": "Arrowhead, Kansas City, MO",
+    "score": {
+      "home": 21,
+      "away": 9
+    },
+    "time": {
+      "quarter": "2nd",
+      "clock": {
+        "min": 7,
+        "sec": 55
+      }
+    },
+    "possession": "KC",
+    "ballSpot": {
+      "yd": 34,
+      "side": "KC"
+    },
+    "driveStatus": {
+      "down": 2,
+      "yd": 4
+    }
+  },
+  {
+    "id": 1,
+    "home": {
+      "name": "San Francisco 49ers",
+      "short": "SF",
+      "record": {
+        "win": 13,
+        "loss": 3
+      }
+    },
+    "away": {
+      "name": "Green Bay Packers",
+      "short": "GB",
+      "record": {
+        "win": 13,
+        "loss": 3
+      }
+    },
+    "stadium": "Levi's Stadium, Santa Clara, CA",
+    "score": {
+      "home": 16,
+      "away": 10
+    },
+    "time": {
+      "quarter": "3rd",
+      "clock": {
+        "min": 2,
+        "sec": 7
+      }
+    },
+    "possession": "GB",
+    "ballSpot": {
+      "yd": 1,
+      "side": "GB"
+    },
+    "driveStatus": {
+      "down": 1,
+      "yd": 10
+    }
+  }
+]
