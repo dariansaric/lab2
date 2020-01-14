@@ -47,7 +47,9 @@ const standardInput = process.stdin;
 // console.log(gf);
 const games = JSON.parse(fs.readFileSync('games.json', 'utf-8'));
 const connections = [];
+const commands = ["score", "time", "driveStatus", "possession", "ballSpot"];
 standardInput.setEncoding('utf-8');
+// procesiranje upisa updatea
 standardInput.on('data', data => {
     console.log('primio sam: %s', data);
     if (data === 'exit\n') {
@@ -55,19 +57,15 @@ standardInput.on('data', data => {
         process.exit();
     }
 
-    // vrste updatea: rezultat, vrijeme
+    // todo: vise updateova istovremeno
     let input = data.split("-");
-    switch (input[0]) {
-        case "TIME": // mijenjaj vrijeme
-            update_time(JSON.parse(input[1]));
-            break;
-        case "SCORE": // mijenjaj rezultat
-            update_score(JSON.parse(input[1]));
-            break;
-        default: // ne valja input
-            console.log("WARNING: neispravna update naredba '%s'", input);
+    if (commands.includes(input[0])) {
+        update_game(JSON.parse(input[1]), input[0]);
+    } else {
+        console.log("ERROR: Invalid command '%s'", input[0]);
     }
-});
+})
+;
 // init_data();
 const wss = new WebSocketServer({"port": 8081});
 
@@ -92,35 +90,12 @@ wss.on('connection', (ws, req) => {
     })
 });
 
-// function init_data() {
-//     games.push(game);
-// }
-
-function update_time(update) {
+function update_game(update, type) {
+    console.log("mijenjam %s za utakmicu %s", type, update.id);
     if (update.id === null) {
         // error log
         return;
-    } else if (update.time === null) {
-        // error log
-        return;
-    }
-
-    let game = retrieve_game_for_id(update.id);
-    if (game === null) {
-        //error log
-        return;
-    }
-    game.time = update.time;
-    // broadcast?
-    broadcast_game_update(game);
-}
-
-function update_score(update) {
-    console.log("mijenjam rezultat za utakmicu %s", update.id);
-    if (update.id === null) {
-        // error log
-        return;
-    } else if (update.score === null) {
+    } else if (update[type] === null) {
         // error log
         return;
     }
@@ -130,7 +105,7 @@ function update_score(update) {
         console.log("Ne postoji utakmica s id '%d'", update.id);
         return;
     }
-    game.score = update.score;
+    game[type] = update[type];
     broadcast_game_update(game);
 }
 
@@ -153,8 +128,13 @@ function retrieve_game_for_id(id) {
 }
 
 function broadcast_game_update(game) {
-    let msg = {};
-    msg.type = "update";
-    msg.game = game;
+    let msg = {type: "update", game: game};
     connections.forEach(ws => ws.send(JSON.stringify(msg)));
 }
+
+// naredbe za testiranje promjena
+// score-{"id":0,"score":{"home":24,"away":9}}
+// time-{"id":0,"time":{"quarter":2,"clock":{"min":1,"sec":9}}}
+// driveStatus-{"id":1, "driveStatus":{"down":4,"yd":0}}
+// possession-{"id":1,"possession":"SF"}
+// ballSpot-{"id":1,"ballSpot":{"yd":20,"side":"SF"}}

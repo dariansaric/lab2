@@ -23,7 +23,7 @@
       "away": 9
     },
     "time": {
-      "quarter": "2nd",
+      "quarter": 2,
       "clock": {
         "min": 7,
         "sec": 55
@@ -63,7 +63,7 @@
       "away": 10
     },
     "time": {
-      "quarter": "3rd",
+      "quarter": 3,
       "clock": {
         "min": 2,
         "sec": 7

@@ -5,10 +5,9 @@
     <title>Rezultati.domena</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
-        let wsUri = "ws://localhost:8081";
-        var results;
-        var ws;
-        // todo: actual dohvacanje sranja
+        const wsUri = "ws://localhost:8081";
+        let results;
+        let ws;
         $(document).ready(function () {
             if (!init()) {
                 return;
@@ -18,7 +17,7 @@
 
         function init() {
             if (!window.WebSocket) {
-                alert("This browser doesn't support WebScoket!!");
+                alert("This browser doesn't support WebSocket!!");
                 return false;
             }
             results = $("#results");
@@ -39,6 +38,7 @@
 
         function onClose(evt) {
             $("#con-status").text("Disconnected");
+            createSocket();
         }
 
         function onError(evt) {
@@ -47,13 +47,14 @@
 
         function onMessage(evt) {
             let msg = JSON.parse(evt.data);
-            switch (msg.type) {
+            switch (msg.type.toLowerCase()) {
                 case "all":
-                    alert("Primljeni svi rezultati!!");
+                    // alert("Primljeni svi rezultati!!");
+                    $("#res-table tbody").empty();
                     msg.games.forEach(g => add_table_row(g));
                     break;
                 case "update":
-                    alert("Primljen update");
+                    // alert("Primljen update");
                     update_table_row(msg.game);
                     break;
                 default:
@@ -75,7 +76,7 @@
             $("#tr_" + game.id).html(form_game_table_row(game));
         }
 
-        function convert_down_to_string(down) {
+        function convert_number_to_string(down) {
             switch (down) {
                 case 1:
                     return "1st";
@@ -91,16 +92,23 @@
         }
 
         function form_game_table_row(game) {
-            let html = "<td id='" + game.id + "-away'>" + game.away.name + "</td>"; // dodaj away
+
+            let html = "<td id='" + game.id + "-away'>" + game.away.name +
+                (game.possession === game.away.short ? "&middot" : "") + "</td>"; // dodaj away
             html += "<td id='" + game.id + "-score'>" + game.score.away + " : " + game.score.home + "</td>"; // dodaj score
-            html += "<td id='" + game.id + "-home'>" + game.home.name + "</td>"; // dodaj home
-            html += "<td id='" + game.id + "-time'>" + game.time.quarter + " "
+            html += "<td id='" + game.id + "-home'>" + game.home.name +
+                (game.possession === game.home.short ? "&middot" : "") + "</td>"; // dodaj home
+            html += "<td id='" + game.id + "-time'>" + convert_number_to_string(game.time.quarter) + " "
                 + game.time.clock.min + ":" + ("%0" + game.time.clock.sec).slice(-2) + "</td>"; // dodaj time
-            html += "<td id='" + game.id + "-ballSpot'>" + game.ballSpot.side + " " + game.ballSpot.yd + "</td>"; // dodaj lokaciju lopte
-            html += "<td id='" + game.id + "-driveStatus'>" + convert_down_to_string(game.driveStatus.down) +
-                " & " + game.driveStatus.yd + "</td>"; // dodaj down
+            html += "<td id='" + game.id + "-ballSpot'>" + game.ballSpot.side + " " + check_yards(game.ballSpot.yd) + "</td>"; // dodaj lokaciju lopte
+            html += "<td id='" + game.id + "-driveStatus'>" + convert_number_to_string(game.driveStatus.down) +
+                " & " + check_yards(game.driveStatus.yd) + "</td>"; // dodaj down
             html += "<td id='" + game.id + "-stadium'>" + game.stadium + "</td>"; // dodaj stadium
             return html;
+        }
+
+        function check_yards(yd) {
+            return yd < 1 ? "inches" : yd;
         }
     </script>
 </head>
