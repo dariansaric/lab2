@@ -47,7 +47,7 @@ const standardInput = process.stdin;
 // console.log(gf);
 const games = JSON.parse(fs.readFileSync('games.json', 'utf-8'));
 const connections = [];
-const commands = ["score", "time", "driveStatus", "possession", "ballSpot"];
+const commands = ["multiple", "score", "time", "driveStatus", "possession", "ballSpot"];
 standardInput.setEncoding('utf-8');
 // procesiranje upisa updatea
 standardInput.on('data', data => {
@@ -60,7 +60,11 @@ standardInput.on('data', data => {
     // todo: vise updateova istovremeno
     let input = data.split("-");
     if (commands.includes(input[0])) {
-        update_game(JSON.parse(input[1]), input[0]);
+        if (input[0] === "multiple") {
+            JSON.parse(input[1]).forEach(mu => update_game(mu.update, mu.type))
+        } else {
+            update_game(JSON.parse(input[1]), input[0]);
+        }
     } else {
         console.log("ERROR: Invalid command '%s'", input[0]);
     }
@@ -138,3 +142,5 @@ function broadcast_game_update(game) {
 // driveStatus-{"id":1, "driveStatus":{"down":4,"yd":0}}
 // possession-{"id":1,"possession":"SF"}
 // ballSpot-{"id":1,"ballSpot":{"yd":20,"side":"SF"}}
+// multiple-[{"type":"ballSpot", "update":{"id":1, "ballSpot":{"yd":20, "side":"SF"}}}, {"type":"possession", "update":{"id":0, "possession":"KC"}}]
+// multiple-[{"type":"ballSpot", "update":{"id":1, "ballSpot":{"yd":20, "side":"GB"}}}, {"type":"possession", "update":{"id":0, "possession":"TEN"}},{"type":"score", "update":{"id":0,"score":{"home":28, "away":12}}}]
