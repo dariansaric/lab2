@@ -1,52 +1,8 @@
 const fs = require('fs');
 const WebSocketServer = require('ws').Server;
-// const readline = require('readline');
 const standardInput = process.stdin;
-// const game = { // ovo je izgled utakmice
-//     id: 0,
-//     home: {
-//         name: "Kansas City Chiefs",
-//         short: "KC",
-//         record: {
-//             win: 11,
-//             loss: 5
-//         }
-//     },
-//     away: {
-//         name: "Tennessee Titans",
-//         short: "TEN",
-//         record: {
-//             win: 9,
-//             loss: 7
-//         }
-//     },
-//     stadium: "Arrowhead, Kansas City, MO",
-//     // kickoffTime:
-//     score: {
-//         home: 0,
-//         away: 0
-//     },
-//     time: {
-//         quarter: "2nd",
-//         clock: {
-//             min: 7,
-//             sec: 55
-//         }
-//     },
-//     possession: "KC",
-//     ballSpot: {
-//         yd: 34,
-//         side: "KC"
-//     },
-//     driveStatus: {
-//         down: 2,
-//         yd: 4
-//     }
-// };
-// const gf = fs.readFileSync('games.json', 'utf-8');
-// console.log(gf);
 const games = JSON.parse(fs.readFileSync('games.json', 'utf-8'));
-const connections = [];
+const connections = []; // todo: subscribe?
 const commands = ["multiple", "score", "time", "driveStatus", "possession", "ballSpot"];
 standardInput.setEncoding('utf-8');
 // procesiranje upisa updatea
@@ -57,7 +13,6 @@ standardInput.on('data', data => {
         process.exit();
     }
 
-    // todo: vise updateova istovremeno
     let input = data.split("-");
     if (commands.includes(input[0])) {
         if (input[0] === "multiple") {
@@ -68,13 +23,9 @@ standardInput.on('data', data => {
     } else {
         console.log("ERROR: Invalid command '%s'", input[0]);
     }
-})
-;
-// init_data();
+});
 const wss = new WebSocketServer({"port": 8081});
 
-// todo: baratanje ulaznim podacima
-// todo: rad websocket servera s porukama
 wss.on('connection', (ws, req) => {
     const client_remote_address = req.connection.remoteAddress;
     console.log("LOG: spojen novi klijent s '%s'! Šaljem sve utakmice...", client_remote_address);
