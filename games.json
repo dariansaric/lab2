@@ -78,5 +78,45 @@
       "down": 1,
       "yd": 10
     }
+  },
+  {
+    "id": 2,
+    "home": {
+      "name": "Pittsburgh Steelers",
+      "short": "PIT",
+      "record": {
+        "win": 8,
+        "loss": 8
+      }
+    },
+    "away": {
+      "name": "Baltimore Ravens",
+      "short": "BAL",
+      "record": {
+        "win": 14,
+        "loss": 2
+      }
+    },
+    "stadium": "Heinz Field, Pittsburgh, PEN",
+    "score": {
+      "home": 0,
+      "away": 0
+    },
+    "time": {
+      "quarter": 1,
+      "clock": {
+        "min": 15,
+        "sec": 0
+      }
+    },
+    "possession": "PIT",
+    "ballSpot": {
+      "yd": 20,
+      "side": "PIT"
+    },
+    "driveStatus": {
+      "down": 1,
+      "yd": 10
+    }
   }
 ]
